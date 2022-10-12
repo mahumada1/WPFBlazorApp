@@ -1,0 +1,71 @@
+﻿@page "/"
+@using portal.Components.Models
+<h1>Counter</h1>
+
+<p>Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<button class="btn btn-primary" @onclick="Mensaje">Ver Mensaje</button>
+
+<a href="producto" >ProductoPage</a>
+
+@*<MessageDialogComponent Context="@MessageContext">
+    <p>TODO <strong>ITEM</strong></p>
+</MessageDialogComponent>*@
+
+
+<TelerikDialog @bind-Visible="@MessageContext.Visible"
+               Width="@MessageContext.Width"
+               ShowCloseButton="@MessageContext.MostrarCloseButton"
+               ButtonsLayout="@DialogButtonsLayout.End">
+    <DialogTitle>
+        <TelerikIcon Icon="@MessageContext.Icon"></TelerikIcon> <span style="margin-left: 8px">@MessageContext.Titulo</span>
+    </DialogTitle>
+    <DialogContent>
+        <span>pregunta?</span>
+    </DialogContent>
+    <DialogButtons>
+        @foreach (var btn in MessageContext.ListadoBotones)
+        {
+            <TelerikButton OnClick="@btn.EventoBoton" ThemeColor="@btn.ColorBoton">@btn.TituloBoton</TelerikButton>
+        }
+    </DialogButtons>
+</TelerikDialog>
+
+@code {
+    private int currentCount = 0;
+
+    public MessageDialogModel MessageContext { get; set; } = new MessageDialogModel();
+
+    public void Mensaje()
+    {
+
+        var cerrarAction = new Action(() =>
+        {
+            MessageContext.Visible = false;
+        });
+
+        MessageContext = new MessageDialogModel
+            {
+                Visible = true,
+                Titulo = "Valtek",
+                Icon = "gears",
+                MostrarCloseButton = true,
+                Width = "550px",
+                Mensaje = "¿Esta seguro que desea eliminar el Grupo?",
+                ListadoBotones = new List<MessageDialogButtonsModel>
+                {
+                   new MessageDialogButtonsModel{ ColorBoton = "Succes", TituloBoton = "OK", EventoBoton = (() => { cerrarAction();}) },
+                   new MessageDialogButtonsModel{ ColorBoton = "Succes", TituloBoton = "Cancelar", EventoBoton = (() => { cerrarAction();}) },
+                   new MessageDialogButtonsModel{ ColorBoton = "Succes", TituloBoton = "Cancelar", EventoBoton = (() => { cerrarAction();}) },
+                   new MessageDialogButtonsModel{ ColorBoton = "Succes", TituloBoton = "Cancelar", EventoBoton = (() => { cerrarAction();}) },
+                }
+            };
+    }
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
